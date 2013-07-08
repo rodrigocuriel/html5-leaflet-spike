@@ -1,0 +1,17 @@
+html, body, #map {
+	width: 640px !important;
+	min-width: 640px !important;
+	max-width: 640px !important;
+	height: 480px !important;
+	min-height: 480px !important;
+	max-height: 480px !important;
+	padding: 0;
+	margin: 0;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: orange;
+}
+.leaflet-popup-content {
+	text-align: center;
+}

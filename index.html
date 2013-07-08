@@ -1,0 +1,72 @@
+<html>
+<head>
+	<title>Leaflet</title>
+	<meta name="viewport" id="viewport" content="width=device-width,height=device-height,target-densitydpi=device-dpi,user-scalable=no,initial-scale=1.0" />
+	<link rel="stylesheet" href="css/leaflet.css" />
+	<link rel="stylesheet" href="css/mobile.css" />
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+  	<link rel="stylesheet" href="css/leaflet.awesome-markers.css">
+</head>
+<body>
+	<div id="map"></div>
+	<!-- <script src="../../build/deps.js"></script> -->
+	<!-- <script src="../leaflet-include.js"></script> -->
+	<script src="js/leaflet.js"></script>
+	<script src="layer/tile/Bing.js"></script>
+	<script src="js/leaflet.awesome-markers.js"></script>
+
+	<script type='text/javascript'>
+	var map = new L.Map('map', {center: new L.LatLng(67.6755, 33.936), zoom: 10 });
+	var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+	var bing_api_key = 'Am0mAkjw3Dzr-9Vq1L2O27lY468nRQlw18TKhK6JDleeMQHFSuGmrThDOsfhj3zS';
+	var bing = new L.BingLayer(bing_api_key);
+
+	var colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple'];
+    var awesomeIcons = ['font', 'cloud-download', 'medkit', 'github-alt', 'coffee', 'food', 'bell-alt', 'question-sign', 'star'];
+
+	map.addLayer(bing);
+	map.addControl(new L.Control.Layers({'OSM':osm, "Bing":bing}, {}));
+
+
+
+	function onLocationFound(e) {
+		var radius = e.accuracy / 2;
+
+		L.marker(e.latlng).addTo(map)
+			.bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+		L.circle(e.latlng, radius).addTo(map);
+		for (var i = 0; i <= 10; i++) {
+	      var color = colors[Math.floor(Math.random()*colors.length)];
+	      var awesomeIcon = awesomeIcons[Math.floor(Math.random()*awesomeIcons.length)];
+	      var geo = getRandomLatLng();
+	      //console.log(geo);
+	      L.marker(geo, {icon: L.AwesomeMarkers.icon({icon: awesomeIcon, color: color}) }).addTo(map).bindPopup("You are seeing " + awesomeIcon + " icon<br/>in " + color + ' color');
+	    }
+	}
+
+	function onLocationError(e) {
+		alert(e.message);
+	}
+
+	function getRandomLatLng() {
+        var bounds = map.getBounds(),
+            southWest = bounds.getSouthWest(),
+            northEast = bounds.getNorthEast(),
+            lngSpan = northEast.lng - southWest.lng,
+            latSpan = northEast.lat - southWest.lat;
+
+        return new L.LatLng(
+            southWest.lat + latSpan * Math.random(),
+            southWest.lng + lngSpan * Math.random());
+    }
+
+	map.on('locationfound', onLocationFound);
+	map.on('locationerror', onLocationError);
+
+	map.locate({setView: true, maxZoom: 16});
+
+	</script>
+ 
+</body>
+</html>
